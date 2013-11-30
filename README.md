@@ -1,1 +1,1 @@
-cat <svgfile> | python svg2gcode.py
+cat svgfile | python svg2gcode.py

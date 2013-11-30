@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import logging
+import traceback
 import xml.etree.ElementTree as ET
 import simplepath
 import cubicsuperpath
@@ -16,6 +17,7 @@ class svgshape(object):
         try:
             self.xml_tree = ET.fromstring(xml)
         except:
+	    traceback.print_exc()		
             logging.error("Unable to parse xml %s", xml)
 
     def d_path(self):
@@ -48,12 +50,12 @@ class rect(svgshape):
 
         if (not (self.xml_tree == None) and self.xml_tree.tag == 'rect'):
             rect_el = self.xml_tree
-            self.x  = int(rect_el.get('x')) if rect_el.get('x') else 0
-            self.y  = int(rect_el.get('y')) if rect_el.get('y') else 0
-            self.rx = int(rect_el.get('rx')) if rect_el.get('rx') else 0
-            self.ry = int(rect_el.get('ry')) if rect_el.get('ry') else 0
-            self.width = int(rect_el.get('width')) if rect_el.get('width') else 0
-            self.height = int(rect_el.get('height')) if rect_el.get('height') else 0
+            self.x  = float(rect_el.get('x')) if rect_el.get('x') else 0
+            self.y  = float(rect_el.get('y')) if rect_el.get('y') else 0
+            self.rx = float(rect_el.get('rx')) if rect_el.get('rx') else 0
+            self.ry = float(rect_el.get('ry')) if rect_el.get('ry') else 0
+            self.width = float(rect_el.get('width')) if rect_el.get('width') else 0
+            self.height = float(rect_el.get('height')) if rect_el.get('height') else 0
         else:
             self.x = self.y = self.rx = self.ry = self.width = self.height = 0
             logging.error("rect: Unable to get the attributes for %s", self.xml)
@@ -74,10 +76,10 @@ class ellipse(svgshape):
 
         if (not (self.xml_tree == None) and self.xml_tree.tag == 'ellipse'):
             ellipse_el = self.xml_tree
-            self.cx  = int(ellipse_el.get('cx')) if ellipse_el.get('cx') else 0
-            self.cy  = int(ellipse_el.get('cy')) if ellipse_el.get('cy') else 0
-            self.rx = int(ellipse_el.get('rx')) if ellipse_el.get('rx') else 0
-            self.ry = int(ellipse_el.get('ry')) if ellipse_el.get('ry') else 0
+            self.cx  = float(ellipse_el.get('cx')) if ellipse_el.get('cx') else 0
+            self.cy  = float(ellipse_el.get('cy')) if ellipse_el.get('cy') else 0
+            self.rx = float(ellipse_el.get('rx')) if ellipse_el.get('rx') else 0
+            self.ry = float(ellipse_el.get('ry')) if ellipse_el.get('ry') else 0
         else:
             self.cx = self.cy = self.rx = self.ry = 0
             logging.error("ellipse: Unable to get the attributes for %s", self.xml)
@@ -98,9 +100,9 @@ class circle(ellipse):
 
         if (not (self.xml_tree == None) and self.xml_tree.tag == 'circle'):
             circle_el = self.xml_tree
-            self.cx  = int(circle_el.get('cx')) if circle_el.get('cx') else 0
-            self.cy  = int(circle_el.get('cy')) if circle_el.get('cy') else 0
-            self.rx = int(circle_el.get('r')) if circle_el.get('r') else 0
+            self.cx  = float(circle_el.get('cx')) if circle_el.get('cx') else 0
+            self.cy  = float(circle_el.get('cy')) if circle_el.get('cy') else 0
+            self.rx = float(circle_el.get('r')) if circle_el.get('r') else 0
             self.ry = self.rx
         else:
             self.cx = self.cy = self.r = 0
@@ -113,10 +115,10 @@ class line(svgshape):
 
         if (not (self.xml_tree == None) and self.xml_tree.tag == 'line'):
             line_el = self.xml_tree
-            self.x1  = int(line_el.get('x1')) if line_el.get('x1') else 0
-            self.y1  = int(line_el.get('y1')) if line_el.get('y1') else 0
-            self.x2 = int(line_el.get('x2')) if line_el.get('x2') else 0
-            self.y2 = int(line_el.get('y2')) if line_el.get('y2') else 0
+            self.x1  = float(line_el.get('x1')) if line_el.get('x1') else 0
+            self.y1  = float(line_el.get('y1')) if line_el.get('y1') else 0
+            self.x2 = float(line_el.get('x2')) if line_el.get('x2') else 0
+            self.y2 = float(line_el.get('y2')) if line_el.get('y2') else 0
         else:
             self.x1 = self.y1 = self.x2 = self.y2 = 0
             logging.error("line: Unable to get the attributes for %s", self.xml)

@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 import shapes as shapes_pkg
 from shapes import point_generator
 
-preamble = "G28\n\n G1 Z5.0\n\n"
+preamble = "G28\nG1 Z5.0"
 postamble = "G28"
 shape_preamble = "G4 P200"
 shape_postamble = "G4 P200"

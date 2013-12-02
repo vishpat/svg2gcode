@@ -4,11 +4,7 @@ import sys
 import xml.etree.ElementTree as ET
 import shapes as shapes_pkg
 from shapes import point_generator
-
-preamble = "G28\nG1 Z5.0"
-postamble = "G28"
-shape_preamble = "G4 P200"
-shape_postamble = "G4 P200"
+from config import *
 
 def generate_gcode():
     svg_shapes = set(['rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon', 'path'])
@@ -16,19 +12,29 @@ def generate_gcode():
     tree = ET.parse(sys.stdin)
     root = tree.getroot()
     
+    width = float(root.get('width'))
+    height = float(root.get('height'))
+    scale_x = bed_max_x / max(width, height)
+    scale_y = bed_max_y / max(width, height)
+
     print preamble 
     
     for elem in root.iter():
-        _, tag_suffix = elem.tag.split('}')
+        
+        try:
+            _, tag_suffix = elem.tag.split('}')
+        except ValueError:
+            continue
+
         if tag_suffix in svg_shapes:
             shape_class = getattr(shapes_pkg, tag_suffix)
             shape_obj = shape_class(elem)
             d = shape_obj.d_path()
             if d:
                 print shape_preamble 
-                p = point_generator(d)
+                p = point_generator(d, smoothness)
                 for x,y in p:
-                    print "G1 X%0.1f Y%0.1f" % (x, y) 
+                    print "G1 X%0.1f Y%0.1f" % (scale_x*x, scale_y*y) 
                 print shape_postamble
 
     print postamble 

@@ -12,8 +12,20 @@ def generate_gcode():
     tree = ET.parse(sys.stdin)
     root = tree.getroot()
     
-    width = float(root.get('width'))
-    height = float(root.get('height'))
+    width = root.get('width')
+    height = root.get('height')
+    if width == None or height == None:
+        viewbox = root.get('viewBox')
+        if viewbox:
+            _, _, width, height = viewbox.split()                
+
+    if width == None or height == None:
+        print "Unable to get width and height for the svg"
+        sys.exit(1)
+
+    width = float(width)
+    height = float(height)
+
     scale_x = bed_max_x / max(width, height)
     scale_y = bed_max_y / max(width, height)
 

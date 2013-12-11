@@ -46,7 +46,8 @@ def generate_gcode():
                 print shape_preamble 
                 p = point_generator(d, smoothness)
                 for x,y in p:
-                    print "G1 X%0.1f Y%0.1f" % (scale_x*x, scale_y*y) 
+                    if x > 0 and x < bed_max_x and y > 0 and y < bed_max_y:  
+                        print "G1 X%0.1f Y%0.1f" % (scale_x*x, scale_y*y) 
                 print shape_postamble
 
     print postamble 

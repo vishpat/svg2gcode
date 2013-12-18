@@ -9,19 +9,18 @@
   <dependency type="executable" location="extensions">shapes.py</dependency>
   <dependency type="executable" location="extensions">simplepath.py</dependency>
   <dependency type="executable" location="extensions">svg2gcode.py</dependency>
-  <param name="bed-width" type="int" _gui-text="Bed Width">200</param>
-  <param name="bed-height" type="int" _gui-text="Bed Height">200</param>
+  <param name="bed-width" type="int" min="200" max="200" _gui-text="Bed Width">200</param>
+  <param name="bed-height" type="int" min="200" max="200" _gui-text="Bed Height">200</param>
   <param name="gcode-file" type="string" _gui-text="G-code path">plastibot.gcode</param>
-  <param name="preamble" type="String" _gui-text="Preamble">"G28\nG1 Z5.0"</param>
-  <param name="postamble" type="String" _gui-text="Postamble">"G28"</param>
-  <param name="shape-preamble" type="String" _gui-text="Shape Preamble">"G4 P200"</param>
-  <param name="shape-postamble" type="String" _gui-text="Shape Postamble">"G4
-  P200"</param>
+  <param name="preamble" type="string" _gui-text="Preamble">G28\nG1 Z5.0</param>
+  <param name="postamble" type="string" _gui-text="Postamble">G28</param>
+  <param name="shape-preamble" type="string" _gui-text="Shape Preamble">G4 P200</param>
+  <param name="shape-postamble" type="string" _gui-text="Shape Postamble">G4 P200</param>
  
   <effect>
     <object-type>all</object-type>
     <effects-menu>
-       <submenu _name="Plastibot"/>
+       <submenu _name="svg2gcode"/>
     </effects-menu>
   </effect>
   <script>

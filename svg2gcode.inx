@@ -1,0 +1,24 @@
+<inkscape-extension>
+  <_name>svg2gcode</_name>
+  <id>com.plastibot.svg2gcode</id>
+  <dependency type="executable" location="extensions">inkex.py</dependency>
+  <dependency type="executable" location="extensions">bezmisc.py</dependency>
+  <dependency type="executable" location="extensions">cspsubdiv.py</dependency>
+  <dependency type="executable" location="extensions">cubicsuperpath.py</dependency>
+  <dependency type="executable" location="extensions">ffgeom.py</dependency>
+  <dependency type="executable" location="extensions">shapes.py</dependency>
+  <dependency type="executable" location="extensions">simplepath.py</dependency>
+  <dependency type="executable" location="extensions">svg2gcode.py</dependency>
+  <param name="bed_width" type="int" _gui-text="Bed Width">200</param>
+  <param name="bed_height" type="int" _gui-text="Bed Height">200</param>
+  <param name="gcode_file" type="string" _gui-text="G-code path">plastibot.gcode</param>
+  <effect>
+    <object-type>all</object-type>
+    <effects-menu>
+       <submenu _name="Plastibot"/>
+    </effects-menu>
+  </effect>
+  <script>
+    <command reldir="extensions" interpreter="python">svg2gcode.py</command>
+  </script>
+</inkscape-extension>

@@ -4,7 +4,6 @@ import sys
 import xml.etree.ElementTree as ET
 import shapes as shapes_pkg
 from shapes import point_generator
-from config import *
 
 def generate_gcode():
     svg_shapes = set(['rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon', 'path'])

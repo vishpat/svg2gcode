@@ -81,27 +81,7 @@ class svg2gcode(inkex.Effect):
 
     def effect(self):
         svg = self.document.getroot()
-        
         self.generate_gcode(svg)
-
-        width  = inkex.unittouu(svg.get('width'))
-        height = inkex.unittouu(svg.attrib['height'])
-
-        layer = inkex.etree.SubElement(svg, 'g')
-        layer.set(inkex.addNS('label', 'inkscape'), 'Hello svg2gcode Layer')
-        layer.set(inkex.addNS('groupmode', 'inkscape'), 'layer')
-
-        # Create text element
-        text = inkex.etree.Element(inkex.addNS('text','svg'))
-        text.text = 'Hello svg2gcode!'
-
-        # Set text position to center of document.
-        text.set('x', str(width / 2))
-        text.set('y', str(height / 2))
-
-        # Connect elements together.
-        layer.append(text)
-
 
 effect = svg2gcode();
 effect.affect();

@@ -20,7 +20,7 @@
   <effect>
     <object-type>all</object-type>
     <effects-menu>
-       <submenu _name="svg2gcode"/>
+       <submenu _name="plastibot"/>
     </effects-menu>
   </effect>
   <script>

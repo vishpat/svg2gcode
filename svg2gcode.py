@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 
 import sys
-import xml.etree.ElementTree as ET
-import shapes as shapes_pkg
-from shapes import point_generator
+import os 
 
 import inkex
-from simplestyle import *
+import shapes as shapes_pkg
+from shapes import point_generator
 
 class svg2gcode(inkex.Effect):
 
@@ -21,67 +20,68 @@ class svg2gcode(inkex.Effect):
         self.OptionParser.add_option('-o', '--gcode-file', action = 'store',
           type = 'string', dest = 'gcode_file', default = 'plastibot.gcode',
           help = 'The generated gcode file path')
-
-    def generate_gcode():
-
-        svg_shapes = set(['rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon', 'path'])
         
-        tree = ET.parse(sys.stdin)
-        root = tree.getroot()
+        self.OptionParser.add_option('-p', '--preamble', action = 'store',
+          type = 'string', dest = 'preamble', default = 'G28\nG1 Z5.0\n',
+          help = 'Preamble G-code')
+        self.OptionParser.add_option('-q', '--postamble', action = 'store',
+          type = 'string', dest = 'postamble', default = 'G28\nG1 Z5.0\n',
+          help = 'Postamble G-code')
+        self.OptionParser.add_option('-s', '--shape-preamble', action = 'store',
+          type = 'string', dest = 'shape_preamble', default = 'G4 P200\n',
+          help = 'Shape Preamble G-code')
+        self.OptionParser.add_option('-t', '--shape-postamble', action = 'store',
+          type = 'string', dest = 'shape_postamble', default = 'G4 P200\n',
+          help = 'Shape Postamble G-code')
         
-        width = root.get('width')
-        height = root.get('height')
-        if width == None or height == None:
-            viewbox = root.get('viewBox')
-            if viewbox:
-                _, _, width, height = viewbox.split()                
-
-        if width == None or height == None:
-            print "Unable to get width and height for the svg"
-            sys.exit(1)
-
-        width = float(width)
-        height = float(height)
-
-        scale_x = bed_max_x / max(width, height)
-        scale_y = bed_max_y / max(width, height)
-
-        print preamble 
+    def generate_gcode(svg):
+        gcode_file = os.path.join(os.path.expanduser('~'), self.options.gcode_file)
+        bed_width = self.options.bed_width
+        bed_height = self.options.bed_height
         
-        for elem in root.iter():
+        width = svg.get('width')
+        height = svg.get('height')
+
+        width = inkex.unittouu(width)
+        height = inkex.unittouu(height)
+
+        scale_x = bed_width / max(width, height)
+        scale_y = bed_height / max(width, height)
+
+        with open(gcode_file) as gcode:  
+            gcode.write(self.options.preamble + '\n')
+     
+            svg_shapes = set(['rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon', 'path'])
             
-            try:
-                _, tag_suffix = elem.tag.split('}')
-            except ValueError:
-                continue
+            for elem in svg.iter():
+                
+                try:
+                    _, tag_suffix = elem.tag.split('}')
+                except ValueError:
+                    continue
 
-            if tag_suffix in svg_shapes:
-                shape_class = getattr(shapes_pkg, tag_suffix)
-                shape_obj = shape_class(elem)
-                d = shape_obj.d_path()
-                if d:
-                    print shape_preamble 
-                    p = point_generator(d, smoothness)
-                    for x,y in p:
-                        if x > 0 and x < bed_max_x and y > 0 and y < bed_max_y:  
-                            print "G1 X%0.1f Y%0.1f" % (scale_x*x, scale_y*y) 
-                    print shape_postamble
+                if tag_suffix in svg_shapes:
+                    shape_class = getattr(shapes_pkg, tag_suffix)
+                    shape_obj = shape_class(elem)
+                    d = shape_obj.d_path()
+                    if d:
+                        gcode.write(self.options.shape_preamble + '\n')
 
-        print postamble 
+                        p = point_generator(d, smoothness)
+                        for x,y in p:
+                            if x > 0 and x < bed_width and y > 0 and y < bed_height:  
+                                gcode.write("G1 X%0.1f Y%0.1f\n" % (scale_x*x, scale_y*y)) 
+
+                        gcode.write(self.options.shape_postamble + '\n')
+
+                gcode.write(self.options.postamble + '\n')
 
     def effect(self):
-        what = self.options.gcode_file
-
-        # Get access to main SVG document element and get its dimensions.
         svg = self.document.getroot()
-        # or alternatively
-        # svg = self.document.xpath('//svg:svg',namespaces=inkex.NSS)[0]
-
-        # Again, there are two ways to get the attibutes:
+        
         width  = inkex.unittouu(svg.get('width'))
         height = inkex.unittouu(svg.attrib['height'])
 
-        # Create a new layer.
         layer = inkex.etree.SubElement(svg, 'g')
         layer.set(inkex.addNS('label', 'inkscape'), 'Hello %s Layer' % (what))
         layer.set(inkex.addNS('groupmode', 'inkscape'), 'layer')

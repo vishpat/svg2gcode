@@ -6,6 +6,7 @@ import shapes as shapes_pkg
 from shapes import point_generator
 
 import inkex
+from simplestyle import *
 
 class svg2gcode(inkex.Effect):
 
@@ -14,7 +15,7 @@ class svg2gcode(inkex.Effect):
         self.OptionParser.add_option('-w', '--bed-width', action = 'store',
           type = 'int', dest = 'bed_width', default = 200,
           help = 'Bed Width')
-        self.OptionParser.add_option('-h', '--bed-height', action = 'store',
+        self.OptionParser.add_option('-x', '--bed-height', action = 'store',
           type = 'int', dest = 'bed_height', default = 200,
           help = 'Bed Height')
         self.OptionParser.add_option('-o', '--gcode-file', action = 'store',

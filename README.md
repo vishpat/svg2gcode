@@ -1,4 +1,4 @@
-An Inkscape extension to convert a SVG drawing to G-code.
+An Inkscape extension to convert a SVG drawing to G-code for reprap machines.
 
 Installation
 ------------
@@ -11,5 +11,5 @@ Copy the __svg2gcode.py__, __svg2gcode.inx__ and __shapes.py__ to Inkscape __ext
 
 Parameters
 ----------
-The size of the bed is controlled via the __bed-width__ and __bed-height__ parameters in __svg2gcode.inx__ file.
+The size of the bed is controlled via the __bed-width__ and __bed-height__ parameters in __svg2gcode.inx__ file. Please note that the size of the SVG image should match with the size of the printer/plotter bed.
 

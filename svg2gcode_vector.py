@@ -7,7 +7,7 @@ import inkex
 import shapes as shapes_pkg
 from shapes import point_generator
 
-class svg2gcode(inkex.Effect):
+class svg2gcode_vector(inkex.Effect):
 
     def __init__(self):
         inkex.Effect.__init__(self)
@@ -83,7 +83,7 @@ class svg2gcode(inkex.Effect):
         svg = self.document.getroot()
         self.generate_gcode(svg)
 
-effect = svg2gcode();
+effect = svg2gcode_vector();
 effect.affect();
 
 

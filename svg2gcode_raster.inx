@@ -1,0 +1,27 @@
+<inkscape-extension>
+  <_name>Raster</_name>
+  <id>com.plastibot.laser.svg2gcode.raster</id>
+  <dependency type="executable" location="extensions">inkex.py</dependency>
+  <dependency type="executable" location="extensions">bezmisc.py</dependency>
+  <dependency type="executable" location="extensions">cspsubdiv.py</dependency>
+  <dependency type="executable" location="extensions">cubicsuperpath.py</dependency>
+  <dependency type="executable" location="extensions">ffgeom.py</dependency>
+  <dependency type="executable" location="extensions">shapes.py</dependency>
+  <dependency type="executable" location="extensions">simplepath.py</dependency>
+  <dependency type="executable" location="extensions">svg2gcode_raster.py</dependency>
+  <param name="bed-width" type="int" min="200" max="200" _gui-text="Bed Width">200</param>
+  <param name="bed-height" type="int" min="200" max="200" _gui-text="Bed Height">200</param>
+  <param name="gcode-file" type="string" _gui-text="G-code path">raster.gcode</param>
+  <param name="preamble" type="string" _gui-text="Preamble">G28 \r\n G1 Z5.0</param>
+  <param name="postamble" type="string" _gui-text="Postamble">G28</param>
+ 
+  <effect>
+    <object-type>all</object-type>
+    <effects-menu>
+       <submenu _name="Plastibot Laser"/>
+    </effects-menu>
+  </effect>
+  <script>
+    <command reldir="extensions" interpreter="python">svg2gcode_raster.py</command>
+  </script>
+</inkscape-extension>

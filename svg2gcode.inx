@@ -1,6 +1,6 @@
 <inkscape-extension>
-  <_name>convert</_name>
-  <id>com.plastibot.svg2gcode</id>
+  <_name>Vector</_name>
+  <id>com.plastibot.laser.svg2gcode.vector</id>
   <dependency type="executable" location="extensions">inkex.py</dependency>
   <dependency type="executable" location="extensions">bezmisc.py</dependency>
   <dependency type="executable" location="extensions">cspsubdiv.py</dependency>
@@ -20,7 +20,7 @@
   <effect>
     <object-type>all</object-type>
     <effects-menu>
-       <submenu _name="svg2gcode"/>
+       <submenu _name="Plastibot Laser"/>
     </effects-menu>
   </effect>
   <script>

@@ -49,30 +49,43 @@ class svg2gcode_raster(inkex.Effect):
         scale_y = bed_height / max(width, height)
         
         points = []
+        threshold = 0.1
+        svg_shapes = set(['rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon', 'path'])
+        
+        for elem in svg.iter():
+            try:
+                _, tag_suffix = elem.tag.split('}')
+            except ValueError:
+                continue
+
+            if tag_suffix in svg_shapes:
+                shape_class = getattr(shapes_pkg, tag_suffix)
+                shape_obj = shape_class(elem)
+                d = shape_obj.d_path()
+                if d:
+                    p = point_generator(d, threshold)
+                    bisect.insort(points, p)
 
         with open(gcode_file, 'w') as gcode:  
             gcode.write(self.options.preamble + '\n')
      
-            svg_shapes = set(['rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon', 'path'])
-            
-            for elem in svg.iter():
-                try:
-                    _, tag_suffix = elem.tag.split('}')
-                except ValueError:
-                    continue
+            if len(points) > 0:
+                prev_x = prev_y = None
+                cur_x, cur_y = points[0]
+                gcode.write("G1 X%0.1f Y%0.1f\n" % (cur_x, cur_y))
+                
+                for x, y in points:
+                    if y == prev_y:
+                        assert x > cur_x, ("next x (%0.1f) is suppose to " +
+                                    "greater than current x (%0.1f)" % (x, cur_x))
+                        if (x - cur_x == threshold):
+                            pass
+                        else:
+                            gcode.write("G1 X%0.1f Y%0.1f\n" % (prev_x, cur_y))
 
-                if tag_suffix in svg_shapes:
-                    shape_class = getattr(shapes_pkg, tag_suffix)
-                    shape_obj = shape_class(elem)
-                    d = shape_obj.d_path()
-                    if d:
-                        p = point_generator(d, 0.1)
-                        bisect.insort(points, p)
+                    prev_x = x
+                    prev_y = y
                         
-            cur_x = 0.0
-            cur_y = 0.0
-            for x, y in points:
-                   pass 
 
             gcode.write(self.options.postamble + '\n')
 

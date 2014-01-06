@@ -72,9 +72,9 @@ class svg2gcode_vector(inkex.Effect):
                     if d:
                         gcode.write(self.options.shape_preamble + '\n')
 
-                        p = point_generator(d, 0.2)
+                        p = point_generator(d, 0.05)
                         for x,y in p:
-                            gcode.write("G1 X%0.1f Y%0.1f\n" % (scale_x*x, scale_y*y)) 
+                            gcode.write("G1 X%0.1f Y%0.1f\n" % (x, y)) 
 
                         gcode.write(self.options.shape_postamble + '\n')
 

@@ -89,16 +89,25 @@ class svg2gcode_raster(inkex.Effect):
         with open(gcode_file, 'w') as gcode:  
             gcode.write(self.options.preamble + '\n')
             
+            laser_high = False
             y = min_y
             while y <= max_y:
                 x = min_x
                 while x <= max_x:
                     i = bisect.bisect_left(points, (round(x, 1), round(y, 1)))
                     if i != len(points) and cmp(points[i], (round(x, 1), round(y, 1))) == 0:
-                        gcode.write("M104 S255\n")
+                        
+                        if not laser_high:
+                            gcode.write("M104 S255\n")
+                            laser_high = True
+
                         gcode.write("G1 X%0.1f Y%0.1f\n" % (x, y))
                     else:
-                        gcode.write("M104 S0\n")
+                        
+                        if laser_high:
+                            gcode.write("M104 S0\n")
+                            laser_high = False
+
                         gcode.write("G1 X%0.1f Y%0.1f\n" % (x, y))
                     x += threshold
                 y += threshold                    

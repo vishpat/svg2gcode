@@ -72,7 +72,7 @@ class svg2gcode_raster(inkex.Effect):
                         min_y = y if y < min_y else min_y
                         max_x = x if x > max_x else max_x
                         max_y = y if y > max_y else max_y
-                        bisect.insort(points, (x, y))
+                        bisect.insort(points, (round(x, 1) , round(y, 1)))
 
         with open(gcode_file, 'w') as gcode:  
             gcode.write(self.options.preamble + '\n')
@@ -81,13 +81,13 @@ class svg2gcode_raster(inkex.Effect):
             while y <= max_y:
                 x = min_x
                 while x <= max_x:
-                    i = bisect.bisect_left(points, (x, y))
-                    if i != len(points) and points[i] == (x, y):
+                    i = bisect.bisect_left(points, (round(x, 1), round(y, 1)))
+                    if i != len(points) and cmp(points[i], (round(x, 1), round(y, 1))) == 0:
                         gcode.write("M104 S255")
+                        gcode.write("G1 X%0.1f Y%0.1f\n" % (x, y))
+                  else:
+                        gcode.write("M104 S0")
                         gcode.write("G1 X%0.1f Y%0.1f" % (x, y))
-#                  else:
-#                        gcode.write("M104 S0")
-#                        gcode.write("G1 X%0.1f Y%0.1f" % (x, y))
                     x += threshold
                 y += threshold                    
 

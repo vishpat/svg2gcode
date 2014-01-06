@@ -51,7 +51,10 @@ class svg2gcode_raster(inkex.Effect):
         points = []
         threshold = 0.1
         svg_shapes = set(['rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon', 'path'])
-        
+       
+        min_x = min_y = sys.maxint
+        max_x = max_y = 0
+
         for elem in svg.iter():
             try:
                 _, tag_suffix = elem.tag.split('}')
@@ -63,30 +66,26 @@ class svg2gcode_raster(inkex.Effect):
                 shape_obj = shape_class(elem)
                 d = shape_obj.d_path()
                 if d:
-                    p = point_generator(d, threshold)
-                    bisect.insort(points, p)
+                    x,y = point_generator(d, threshold)
+                    min_x = x if x < min_x
+                    min_y = y if y < min_y
+                    max_x = x if x > max_x
+                    max_y = y if y > max_y
+                    bisect.insort(points, (x, y))
 
         with open(gcode_file, 'w') as gcode:  
             gcode.write(self.options.preamble + '\n')
-     
-            if len(points) > 0:
-                prev_x = prev_y = None
-                cur_x, cur_y = points[0]
-                gcode.write("G1 X%0.1f Y%0.1f\n" % (cur_x, cur_y))
-                
-                for x, y in points:
-                    if y == prev_y:
-                        assert x > cur_x, ("next x (%0.1f) is suppose to " +
-                                    "greater than current x (%0.1f)" % (x, cur_x))
-                        if (x - cur_x == threshold):
-                            pass
-                        else:
-                            gcode.write("G1 X%0.1f Y%0.1f\n" % (prev_x, cur_y))
 
-                    prev_x = x
-                    prev_y = y
+            for x in xrange(min_x, max_y, threshold):
+                for y in xrange(min_y, max_y, threshold):
+                    i = bisect_left(points, (x, y))
+                    if i != len(a) and points[i] == (x, y):
+                        gcode.write("M104 S255")
+                        gcode.write("G1 X%0.1f Y%0.1f" % (x, y))
+#                  else:
+#                        gcode.write("M104 S0")
+#                        gcode.write("G1 X%0.1f Y%0.1f" % (x, y))
                         
-
             gcode.write(self.options.postamble + '\n')
 
     def effect(self):

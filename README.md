@@ -4,10 +4,14 @@ Installation
 ------------
 Copy the __svg2gcode.py__, __svg2gcode.inx__ and __shapes.py__ to Inkscape __extensions__ directory  
 
-
 * on Windows : "C:\Program Files\Inkscape\share\extensions"
 * on Linux: "/usr/share/inkscape/extensions"
 * on OS X: "/Applications/Inkscape.app/Contents/Resources/extensions"
+
+Copy the __plastibot_laser.svg__ to Inkscape __templates__ directory  
+* on Windows : "C:\Program Files\Inkscape\share\template"
+* on Linux: "/usr/share/inkscape/template"
+* on OS X: "/Applications/Inkscape.app/Contents/Resources/template"
 
 Parameters
 ----------

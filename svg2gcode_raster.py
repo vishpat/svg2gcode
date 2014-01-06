@@ -66,26 +66,31 @@ class svg2gcode_raster(inkex.Effect):
                 shape_obj = shape_class(elem)
                 d = shape_obj.d_path()
                 if d:
-                    x,y = point_generator(d, threshold)
-                    min_x = x if x < min_x
-                    min_y = y if y < min_y
-                    max_x = x if x > max_x
-                    max_y = y if y > max_y
-                    bisect.insort(points, (x, y))
+                    p = point_generator(d, threshold)
+                    for x, y in p:
+                        min_x = x if x < min_x else min_x
+                        min_y = y if y < min_y else min_y
+                        max_x = x if x > max_x else max_x
+                        max_y = y if y > max_y else max_y
+                        bisect.insort(points, (x, y))
 
         with open(gcode_file, 'w') as gcode:  
             gcode.write(self.options.preamble + '\n')
-
-            for x in xrange(min_x, max_y, threshold):
-                for y in xrange(min_y, max_y, threshold):
-                    i = bisect_left(points, (x, y))
-                    if i != len(a) and points[i] == (x, y):
+            
+            y = min_y
+            while y <= max_y:
+                x = min_x
+                while x <= max_x:
+                    i = bisect.bisect_left(points, (x, y))
+                    if i != len(points) and points[i] == (x, y):
                         gcode.write("M104 S255")
                         gcode.write("G1 X%0.1f Y%0.1f" % (x, y))
 #                  else:
 #                        gcode.write("M104 S0")
 #                        gcode.write("G1 X%0.1f Y%0.1f" % (x, y))
-                        
+                    x += threshold
+                y += threshold                    
+
             gcode.write(self.options.postamble + '\n')
 
     def effect(self):

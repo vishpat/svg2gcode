@@ -50,8 +50,9 @@ class svg2gcode_vector(inkex.Effect):
         width = inkex.unittouu(width)
         height = inkex.unittouu(height)
 
-        scale_x = bed_width / max(width, height)
-        scale_y = bed_height / max(width, height)
+        if width > bed_width or height > bed_height:
+            raise ValueError(('The document size (%d x %d) is greater than the bedsize' % 
+                             (round(width, 1), round(height, 1)))) 
 
         with open(gcode_file, 'w') as gcode:  
             gcode.write(self.options.preamble + '\n')

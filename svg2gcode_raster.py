@@ -74,17 +74,25 @@ class svg2gcode_raster(inkex.Effect):
                     for x, y in p:
                         
                         if prev_x is not None and prev_y is not None:
-                            x_incr = (x - prev_x)/intermediate_points 
-                            y_incr = (y - prev_y)/intermediate_points 
-                            for i in range(1, intermediate_points):
-                                bisect.insort(points, (round(prev_x + i*x_incr, 1) , 
+                            
+                            intermediate_points = \
+                                (5 * max(abs(x - prev_x), abs(y - prev_y)))/threshold
+
+                            intermediate_points = int(intermediate_points) 
+                            if intermediate_points > 0:
+                                x_incr = (x - prev_x)/intermediate_points 
+                                y_incr = (y - prev_y)/intermediate_points 
+                                for i in range(1, intermediate_points):
+                                    bisect.insort(points, (round(prev_x + i*x_incr, 1) , 
                                                        round(prev_y + i*y_incr,  1)))
-       
+                             
                         min_x = x if x < min_x else min_x
                         min_y = y if y < min_y else min_y
                         max_x = x if x > max_x else max_x
                         max_y = y if y > max_y else max_y
                         bisect.insort(points, (round(x, 1) , round(y, 1)))
+                        prev_x = x
+                        prev_y = y
 
         with open(gcode_file, 'w') as gcode:  
             gcode.write(self.options.preamble + '\n')
@@ -98,17 +106,17 @@ class svg2gcode_raster(inkex.Effect):
                     if i != len(points) and cmp(points[i], (round(x, 1), round(y, 1))) == 0:
                         
                         if not laser_high:
-                            gcode.write("M104 S255\n")
+#                            gcode.write("M104 S255\n")
                             laser_high = True
 
                         gcode.write("G1 X%0.1f Y%0.1f\n" % (x, y))
                     else:
                         
                         if laser_high:
-                            gcode.write("M104 S0\n")
+#                            gcode.write("M104 S0\n")
                             laser_high = False
 
-                        gcode.write("G1 X%0.1f Y%0.1f\n" % (x, y))
+#                        gcode.write("G1 X%0.1f Y%0.1f\n" % (x, y))
                     x += threshold
                 y += threshold                    
 

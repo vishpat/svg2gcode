@@ -69,10 +69,12 @@ class svg2gcode_vector(inkex.Effect):
                     shape_class = getattr(shapes_pkg, tag_suffix)
                     shape_obj = shape_class(elem)
                     d = shape_obj.d_path()
+                    m = shape_obj.transformation_matrix()
+
                     if d:
                         gcode.write(self.options.shape_preamble + '\n')
 
-                        p = point_generator(d, 0.05)
+                        p = point_generator(d, m, 0.05)
                         for x,y in p:
                             gcode.write("G1 X%0.1f Y%0.1f\n" % (x, y)) 
 

@@ -107,17 +107,17 @@ class svg2gcode_raster(inkex.Effect):
                     if i != len(points) and cmp(points[i], (round(x, 1), round(y, 1))) == 0:
                         
                         if not laser_high:
-#                            gcode.write("M104 S255\n")
+                            gcode.write("M104 S255\n")
                             laser_high = True
 
                         gcode.write("G1 X%0.1f Y%0.1f\n" % (x, y))
                     else:
                         
                         if laser_high:
-#                            gcode.write("M104 S0\n")
+                            gcode.write("M104 S0\n")
                             laser_high = False
 
-#                        gcode.write("G1 X%0.1f Y%0.1f\n" % (x, y))
+                        gcode.write("G1 X%0.1f Y%0.1f\n" % (x, y))
                     x += threshold
                 y += threshold                    
 

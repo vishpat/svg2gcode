@@ -8,6 +8,7 @@
   <dependency type="executable" location="extensions">ffgeom.py</dependency>
   <dependency type="executable" location="extensions">shapes.py</dependency>
   <dependency type="executable" location="extensions">simplepath.py</dependency>
+  <dependency type="executable" location="extensions">simpletransform.py</dependency>
   <dependency type="executable" location="extensions">svg2gcode_vector.py</dependency>
   <param name="bed-width" type="int" min="200" max="200" _gui-text="Bed Width">200</param>
   <param name="bed-height" type="int" min="200" max="200" _gui-text="Bed Height">200</param>

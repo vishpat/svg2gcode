@@ -67,10 +67,11 @@ class svg2gcode_raster(inkex.Effect):
                 shape_class = getattr(shapes_pkg, tag_suffix)
                 shape_obj = shape_class(elem)
                 d = shape_obj.d_path()
-                
+                m = shape_obj.transformation_matrix()
+               
                 if d:
                     prev_x = prev_y = None
-                    p = point_generator(d, threshold)
+                    p = point_generator(d, m, threshold)
                     for x, y in p:
                         
                         if prev_x is not None and prev_y is not None:

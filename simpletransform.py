@@ -21,7 +21,7 @@ barraud@math.univ-lille1.fr
 This code defines several functions to make handling of transform
 attribute easier.
 '''
-import inkex, cubicsuperpath, bezmisc, simplestyle
+import cubicsuperpath, bezmisc 
 import copy, math, re
 
 def parseTransform(transf,mat=[[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]]):

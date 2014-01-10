@@ -42,9 +42,11 @@ def generate_gcode():
             shape_class = getattr(shapes_pkg, tag_suffix)
             shape_obj = shape_class(elem)
             d = shape_obj.d_path()
+            m = shape_obj.transformation_matrix()
+
             if d:
                 print shape_preamble 
-                p = point_generator(d, smoothness)
+                p = point_generator(d, m, smoothness)
                 for x,y in p:
                     if x > 0 and x < bed_max_x and y > 0 and y < bed_max_y:  
                         print "G1 X%0.1f Y%0.1f" % (scale_x*x, scale_y*y) 

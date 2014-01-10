@@ -4,6 +4,7 @@ import logging
 import traceback
 import xml.etree.ElementTree as ET
 import simplepath
+import simpletransform 
 import cubicsuperpath
 import cspsubdiv
 from bezmisc import beziersplitatt
@@ -13,9 +14,13 @@ class svgshape(object):
     
     def __init__(self, xml_node):
         self.xml_node = xml_node 
-
+ 
     def d_path(self):
         raise NotImplementedError
+
+    def transformation_matrix(self):
+        t = self.xml_node.get('transform')
+        return simpletransform.parseTransform(t) if t is not None else None
 
     def svg_path(self):
         return "<path d=\"" + self.d_path() + "\"/>"
@@ -161,7 +166,7 @@ class polyline(polycommon):
             d += " L " + self.points[i]
         return d
 
-def point_generator(path, flatness):
+def point_generator(path, mat, flatness):
 
         if len(simplepath.parsePath(path)) == 0:
                 return
@@ -171,6 +176,10 @@ def point_generator(path, flatness):
         yield startX, startY
 
         p = cubicsuperpath.parsePath(path)
+        
+        if mat:
+            simpletransform.applyTransformToPath(mat, p)
+
         for sp in p:
                 cspsubdiv.subdiv( sp, flatness)
                 for csp in sp:

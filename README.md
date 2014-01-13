@@ -1,4 +1,5 @@
-An Inkscape extension to convert a SVG drawing to G-code for reprap machines.
+An Inkscape extension to convert a SVG drawing to G-code for reprap machines. This plugin has been designed to work with Plastibot laser cutter. The gcode can be
+generated for two modes __vector__ and __raster__ laser scan.
 
 Installation
 ------------

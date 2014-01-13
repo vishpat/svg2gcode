@@ -9,4 +9,4 @@ Some of the characteristics of the compiler can be changed by editing the config
 Inkscape Plugin
 ---------------
 
-To get the Inkscape plugin please checkout the __inkscape__ branch.
+To get the Inkscape plugin please checkout the __plasibot_laser__ branch.
